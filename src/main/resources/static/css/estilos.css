@@ -54,7 +54,7 @@ main { flex: 1; }
     border-radius: 1.25rem;
 }
 .esp-img {
-    height: 150px;
+    height: 230px;
     display: flex;
     align-items: center;
     justify-content: center;
