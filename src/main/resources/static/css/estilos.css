@@ -1,0 +1,104 @@
+:root { --pl-primario: #0b5ed7; --pl-oscuro: #0a2f5c; --pl-claro: #eaf2ff; }
+
+body { background: #f6f8fb; min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1; }
+
+.navbar-policlinico { background: linear-gradient(90deg, var(--pl-oscuro), var(--pl-primario)); }
+.navbar-policlinico .nav-link { position: relative; color: rgba(255,255,255,.85); }
+.navbar-policlinico .nav-link:hover, .navbar-policlinico .nav-link.active { color: #fff; }
+
+/* Subrayado sutil bajo la pestaña activa (y una versión más tenue al pasar el mouse) */
+.navbar-policlinico .nav-link::after {
+    content: "";
+    position: absolute;
+    left: .5rem;
+    right: .5rem;
+    bottom: .1rem;
+    height: 2px;
+    border-radius: 2px;
+    background: #fff;
+    opacity: 0;
+    transform: scaleX(.4);
+    transition: opacity .2s ease, transform .2s ease;
+}
+.navbar-policlinico .nav-link:hover::after { opacity: .45; transform: scaleX(1); }
+.navbar-policlinico .nav-link.active { font-weight: 600; }
+.navbar-policlinico .nav-link.active::after { opacity: 1; transform: scaleX(1); }
+
+.hero {
+    background:
+        linear-gradient(90deg, rgba(255,255,255,.75) 0%, rgba(255,255,255,.35) 55%, rgba(255,255,255,0) 100%),
+        url('../img/Poli_banner.png') center / cover no-repeat;
+    border-radius: 1rem;
+}
+.hero h1 { color: var(--pl-oscuro); }
+.hero .lead { color: #000; font-weight: 600; }
+
+/* Carrusel de especialidades (inicio): 3 a la vez en pantalla grande */
+.esp-carrusel {
+    --esp-por-vista: 3;
+    --esp-gap: 1.25rem;
+    display: flex;
+    gap: var(--esp-gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 .25rem;
+    padding: .25rem .25rem 1rem;
+    scrollbar-width: none;
+}
+.esp-carrusel::-webkit-scrollbar { display: none; }
+.esp-card {
+    flex: 0 0 calc((100% - (var(--esp-por-vista) - 1) * var(--esp-gap)) / var(--esp-por-vista));
+    scroll-snap-align: start;
+    overflow: hidden;
+    border-radius: 1.25rem;
+}
+.esp-img {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(120deg, var(--pl-oscuro), var(--pl-primario));
+    color: #fff;
+    font-size: 3.5rem;
+    position: relative;
+}
+.esp-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.esp-flecha { width: 2.2rem; height: 2.2rem; padding: 0; line-height: 1; }
+@media (max-width: 991.98px) { .esp-carrusel { --esp-por-vista: 2; } }
+@media (max-width: 575.98px) { .esp-carrusel { --esp-por-vista: 1; } }
+
+.tarjeta-resumen { border: 0; border-left: 5px solid var(--pl-primario); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.tarjeta-resumen .numero { font-size: 2rem; font-weight: 700; }
+
+.card { border: 0; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.table thead th { background: var(--pl-claro); color: var(--pl-oscuro); white-space: nowrap; }
+
+.comprobante { max-width: 520px; margin: 0 auto; border: 2px dashed #6c757d; background: #fff; }
+
+footer { background: var(--pl-oscuro); color: #cfd8e6; }
+
+/* Pie de página: 3 columnas + línea de derechos reservados */
+.pie-titulo { color: #fff; font-weight: 700; margin-bottom: .75rem; }
+.pie-texto { font-size: .9rem; color: #cfd8e6; }
+.pie-redes { display: flex; justify-content: center; gap: .75rem; }
+.pie-redes a {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid rgba(255,255,255,.7);
+    border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease;
+}
+.pie-redes a:hover { background: #fff; color: var(--pl-oscuro); }
+.pie-copy { border-top: 1px solid rgba(255,255,255,.2); font-size: .85rem; color: #cfd8e6; }
+
+@media print {
+    .d-print-none, nav, footer, .alert { display: none !important; }
+    body { background: #fff; }
+    .comprobante { border: 1px solid #000; }
+}

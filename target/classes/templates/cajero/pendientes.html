@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Caja')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container py-4">
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+    <h4 class="mb-3"><i class="bi bi-cash-coin"></i> Citas pendientes de pago</h4>
+    <div class="card"><div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Cita</th><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Documento</th><th>Especialidad</th><th>Monto</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${citas}">
+                <td th:text="${c.id}"></td>
+                <td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(c.hora, 'HH:mm')}"></td>
+                <td th:text="${c.pacienteNombre}"></td>
+                <td th:text="${c.documentoPaciente}"></td>
+                <td th:text="${c.especialidadNombre}"></td>
+                <td th:text="'S/ ' + ${#numbers.formatDecimal(c.tarifa, 1, 'COMMA', 2, 'POINT')}"></td>
+                <td class="text-end"><a class="btn btn-success btn-sm" th:href="@{/cajero/pago/{id}(id=${c.id})}">Cobrar</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(citas)}">
+                <td colspan="8" class="text-center text-muted py-4">No hay citas pendientes de pago.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div></div>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Horarios de atención')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container py-4">
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card"><div class="card-body">
+                <h5><i class="bi bi-clock-history"></i> Generar horarios</h5>
+                <form th:action="@{/coordinador/horarios}" method="post" class="row g-2">
+                    <div class="col-12">
+                        <label class="form-label">Profesional</label>
+                        <select class="form-select" name="idProfesional" required>
+                            <option th:each="p : ${profesionales}" th:value="${p.id}"
+                                    th:text="${p.nombreCompleto + ' - ' + p.especialidad.nombre}"></option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-control" name="fecha" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Desde</label>
+                        <input type="time" class="form-control" name="horaInicio" value="08:00" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Hasta</label>
+                        <input type="time" class="form-control" name="horaFin" value="12:00" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Duración de cada cita (min)</label>
+                        <input type="number" class="form-control" name="minutos" value="30" min="10" max="240" required>
+                    </div>
+                    <div class="col-12"><button class="btn btn-primary">Generar</button></div>
+                </form>
+            </div></div>
+        </div>
+
+        <div class="col-lg-8">
+            <h5>Horarios programados</h5>
+            <div class="card"><div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+                <table class="table table-sm align-middle mb-0">
+                    <thead><tr><th>Fecha</th><th>Hora</th><th>Profesional</th><th>Estado</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="h : ${horarios}">
+                        <td th:text="${#temporals.format(h.fecha, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${#temporals.format(h.hora, 'HH:mm')}"></td>
+                        <td th:text="${h.profesional.nombreCompleto}"></td>
+                        <td><span class="badge" th:classappend="${h.estado == 'DISPONIBLE'} ? 'bg-success' : 'bg-secondary'"
+                                  th:text="${h.estado}"></span></td>
+                        <td class="text-end">
+                            <form th:if="${h.estado == 'DISPONIBLE'}"
+                                  th:action="@{/coordinador/horarios/{id}/eliminar(id=${h.id})}" method="post">
+                                <button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(horarios)}">
+                        <td colspan="5" class="text-center text-muted py-3">No hay horarios programados.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div></div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

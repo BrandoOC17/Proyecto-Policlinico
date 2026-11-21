@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registrar personal')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container py-4">
+    <div class="row justify-content-center"><div class="col-lg-7">
+        <div th:replace="~{fragments/layout :: alertas}"></div>
+        <div class="card"><div class="card-body p-4">
+            <h4 class="mb-3"><i class="bi bi-person-badge"></i> Registrar personal del policlínico</h4>
+            <form th:action="@{/coordinador/personal}" method="post" class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="nombres">Nombres</label>
+                    <input class="form-control" id="nombres" name="nombres" th:value="${f?.nombres}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="apellidos">Apellidos</label>
+                    <input class="form-control" id="apellidos" name="apellidos" th:value="${f?.apellidos}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="documento">Documento de identidad</label>
+                    <input class="form-control" id="documento" name="documento" minlength="8" maxlength="12"
+                           th:value="${f?.documento}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="correo">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" th:value="${f?.correo}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="rol">Rol</label>
+                    <select class="form-select" id="rol" name="rol" required>
+                        <option value="PROFESIONAL" th:selected="${f?.rol == 'PROFESIONAL'}">Profesional de salud</option>
+                        <option value="CAJERO" th:selected="${f?.rol == 'CAJERO'}">Cajero</option>
+                    </select>
+                </div>
+                <div class="col-md-6" id="grupoEspecialidad">
+                    <label class="form-label" for="idEspecialidad">Especialidad</label>
+                    <select class="form-select" id="idEspecialidad" name="idEspecialidad">
+                        <option th:each="e : ${especialidades}" th:value="${e.id}" th:text="${e.nombre}"
+                                th:selected="${f?.idEspecialidad == e.id}"></option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="password">Contraseña inicial</label>
+                    <input type="password" class="form-control" id="password" name="password" minlength="6" required>
+                </div>
+                <div class="col-12"><button class="btn btn-primary" type="submit">Registrar</button></div>
+            </form>
+        </div></div>
+    </div></div>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script>
+    // Solo el profesional de salud necesita especialidad
+    const rol = document.getElementById('rol');
+    const grupo = document.getElementById('grupoEspecialidad');
+    const alternar = () => { grupo.style.display = rol.value === 'PROFESIONAL' ? '' : 'none'; };
+    rol.addEventListener('change', alternar);
+    alternar();
+</script>
+</body>
+</html>
